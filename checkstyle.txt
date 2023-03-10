@@ -1,0 +1,15 @@
+Starting audit...
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\checker\CheckStyleConstants.java:3:1: Utility classes should not have a public or default constructor. [HideUtilityClassConstructor]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\input\Start.java:3:15: Using the '.*' form of import should be avoided - actions.*. [AvoidStarImport]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\input\Start.java:215:42: Parameter movie should be final. [FinalParameters]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\input\Start.java:242:41: Parameter currentUser should be final. [FinalParameters]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\input\Start.java:268:41: Parameter currentUser should be final. [FinalParameters]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\input\Start.java:292:42: Parameter currentUser should be final. [FinalParameters]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\input\Start.java:316:45: Parameter currentUser should be final. [FinalParameters]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\input\Start.java:340:41: Parameter currentUser should be final. [FinalParameters]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\input\Start.java:376:13: Parameter currentMovieList should be final. [FinalParameters]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\Main.java:10:1: Utility classes should not have a public or default constructor. [HideUtilityClassConstructor]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\pages\PageFactory.java:31:9: switch without "default" clause. [MissingSwitchDefault]
+[ERROR] C:\Users\Bianca\Desktop\ANUL 2\POO\ETAPA2----\oop-asignments-master\PROIECT\PROIECT2\.\src\Test.java:9:28: Using the '.*' form of import should be avoided - java.util.concurrent.*. [AvoidStarImport]
+Audit done.
+Checkstyle ends with 12 errors.

@@ -1,0 +1,135 @@
+
+Pentru inceput, construim clase pentru obiectele pe care se bazeaza structura implementarii:
+ActionsInput, MoviesInput si UsersInput. In aceste clase retinem datele necesare fiecarui obiect.
+
+O alta clasa importanta in acest algoritm este Page, care retine tipul obiectului sau cu ajutorul
+clasei PageFactory unde am implementat design pattern-ul Factory.
+
+In clasa PageFactory am definit un tip de date enum in care am retinut toate tipurile de pagini.
+Am creat metoda "createPage" prin care returnam un obiect de tipul string-ului pe care
+il transmitem ca parametru.
+
+Implementarea propriu-zisa a testelor incepe din clasa "Start" care primeste ca parametrii input-ul si output-ul acestora.
+Metoda principala din aceasta clasa si cea cu care incepem este "startPlatform" care retine
+utilizatorii, filmele si actiunile din input.
+
+Pentru inceput, initializam toate varabilele de care avem nevoie mai departe si anume: pagina
+curenta (Page currentPage), o lista cu toate paginile (ArrayList<Page> pages), utilizatorul curent
+(UsersInput currentUser), lista de filme curenta (ArrayList<MoviesInput> currentMovieList),
+lista cu toate filmele utilizatorului curent inainte de orice filtrare (ArrayList<MoviesInput>
+allMovieList), un string care retine filmul curent cu care trebuie lucrat (in caz
+ca ne aflam pe pagina "See Details", String movie), o lista in care retinem suma
+fiecarui rating a fiecarui film (ArrayList<Double> sumRate) si o lista cu
+fiecare rating al fiecarui film al utilizatorului nostru (ArrayList<Double> rated).
+
+Parcurgem fiecare actiune pe rand si verificam tipul acesteia cu metoda "verifyType"
+din clasa ActionsInput, care returneaza 0 pentru "on page", 1 pentru "change page",
+2 pentru "back" si - 1 pentru "database".
+
+Daca actiunea este de tipul "change page" apelam metoda "typeChangePage" care returneaza un string
+ce va fi modificat doar in cazul in care suntem pe pagina de "See Details". Metoda construieste
+un obiect de tipul ChangePage cu ajutorul design pattern-ului Builder astfel : in cazul in care
+pagina pe care dorim sa navigam este cea de "Movies", atunci pentru a initializa/schimba
+lista de filme curente si pentru a naviga ulterior pe aceasta pagina, avem nevoie
+de pagina curenta, pagina dorita, lista de pagini, lista de filme si user-ul curent.
+In cazul in care ne aflam pe pagina de "See Details" mai avem nevoie si de filmul curent.
+Altfel, deoarece nu trebuie sa afisam nimic in acest caz, avem nevoie doar de pagina curenta si
+lista de pagini.
+Practic parametrii care sunt obligatorii la orice constructie a unui obiect de tipul ChangePage
+sunt pagina curenta, pagina dorita si lista de pagini, deoarece de ei avem nevoie
+pentru schimbarea paginii in sine.
+
+Dupa ce am construit obiectul ChangePage o sa construim un alt obiect de tipul Undo, deoarece
+am implementat design pattern-ul Command pentru navigarea intre pagini.
+Astfel, clasa Page este Receiver-ul nostru, ChangePage va fi Command si Undo va fi
+Invoker-ul. Interfata Command este formata din doua metode "undo" si "edit", dar la acest
+tip de actiune avem nevoie doar "edit" care apeleaza metoda "execute" din ChangePage.
+
+In "execute" verificam in primul rand daca putem naviga pe pagina dorita de pe pagina pe care
+ne aflam sau, in cazul in care pagina dorita este "See Details" daca filmul cerut se afla
+in lista de filme a utilizatorului. In caz afirmativ, adaugam pagina la lista de pagini si
+setam pagina curenta, realizand dupa operatiile scriere daca este cazul sau operatia de stergere
+a listei de pagini in cazul in care utilizatorul nu mai este logat.
+
+Daca actiunea este de tipul "on page", cream un obiect de tipul OnPage tot cu ajutorul
+Builder-ului, avand nevoie de data aceasta doar de pagina curenta si actiunea.
+Retinem feature-ul intr-o variabila "feature" si verificam daca actiunea poate
+returna sau nu erori prin apelarea metodei "returnError" din clasa OnPage.
+Ca in cazul clasei ChangePage verificam mai intai daca actiunea se poate
+executa pe pagina curenta si daca in cazul in care aceasta este "login",
+verificam daca exista utilizatorul dorit in lista de utilizatori inregistrati,
+iar daca actiunea este "register", verificam aceeasi conditie, dar rezulta eroare in cazul
+in care acesta exista in lista.
+
+Daca nu este nicio eroare si actiunea se poate executa se verifica de ce tip este feature-ul.
+
+Daca feature-ul este de tipul "register" sau "login", atunci se goleste lista de filme
+a utilizatorului precedent, si se autentifica cel curent apeland metoda "setUser".
+In aceasta metoda returnam utilizatorul de pe pozitia pe care acesta se afla in lista de utilizatori logati,
+daca avem o actiune de tipul login, sau se returneaza ultimul utilizatoru adaugat, adica cel dorit, daca
+actiunea este "register".
+Se actualizeaza si in clasa Start utilizatorul curent si se actualizeaza in continuare si lista de filme curente.
+Metoda "setMovieList" parcurge fiecare film din lista  data la input si se verifica ce filme pot fi
+redate in tara utilizatorului curent. Daca am gasit un film care se poate reda si nu se mai regaseste
+in lista curenta de filme, atunci actualizam aceasta lista (realizam deep copy).
+
+Daca feature-ul este de tipul "search", filtram lista curenta de filme astfel:
+apelam metoda "getMoviesAfterSearch" in care parcurgem aceasta lista si verificam care
+dintre acestea incep cu string-ul dat la input, iar pe celelalte le eliminam.
+
+Daca feature-ul este "filter", apelam "filterMovieList" care construieste obiecte de tipul Sort
+sau Contains daca apar in input.
+Pentru filtrarea cu Sort, apelam functia "sortCurrentMovieList" in care sortam in functie de
+durata si dupa de timp cu ajutorul Comparatorului.
+Pentru filtarrea cu Contains, apelam "containsActorsCurrentMovieList" daca se cere filtrarea dupa
+actori, metoda in care parcurgem pe rand fiecare actor si eliminam din lista filmul care nu contine niciunul.
+In mod asemanator am realizat si filtrarea dupa genuri de filme.
+
+Daca feature-ul este "buy tokens", apelam metoda "buyTokens" din clasa Upgrades si setam numarul de tokens
+ai utilizatorului curent la numarul dat, apoi scadem din balanta utilizatorului acelasi numar.
+
+Daca feature-ul este "buyPremiumAccount", apelam metoda "buyPremiumAccount" tot din clasa Upgrades
+si scadeam 10 din numarul de tokens ai utilizatorului curent , urmand sa actualizam tipul contului
+utilizatorului la premium.
+
+Daca feature-ul este "purchase", actualizam utilizatorul curent apeland metoda "purchaseMovie".
+In cadrul acesteia contruim un obiect SeeDetails cu ajutorul design pattern-ului Singleton
+si verificam ca actiunea ceruta sa nu rezulte eroare.
+Dupa aceea apelam metoda "purchaseMovie" in care actualizam lista de purchasedMovies a utilizatorului, dar si
+numarul de tokens sau numarul de filme gratuite disponibile astfel:
+utilizatorul este premium si mai are filme gratuite disponibile, atunci numarul acesta scade,
+dar daca utilizatorul este premium dar nu mai are filme gratuite disponibile, atunci
+numarul de tokens scade cu 2.
+
+Daca feature-ul este "like" sau "watch" procedam in mod similar cu "purchase",
+actualizand lista de likedMovies si watchedMovies a utilizatorului.
+
+Daca feature-ul este "rate", pe langa erorile care trebuie verificate de fiecare data
+la acest tip de actiuni, adaugam si ca rating-ul sa nu fie mai mare ca 5, iar dupa
+aceste verificari apelam "rateMovie" din clasa SeeDetails.
+In primul rand verificam daca utilizatorul a mai dat sau nu rating acestui film. In
+caz negativ, filmul este adaugat la lista de file rated de catre utilizator, iar rating-ul filmului este calculat astfel:
+daca filmul nu a mai avut niciun rating, acesta este egal cu cel dat ca parametru, iar in cazul
+in care nu este primul rating acordat filmului se realizeaza o suma a tuturor rating-urilor de pana acum
+si se imparte la numarul acestora, numarul de rating-uri crescand la final.
+Daca filmul a mai fost rated de utilizator se adauga la suma rating-ul dat ca parametru si se scade cel dat anterior
+de acelasai utilizator.
+
+Daca feature-ul este "subscribe", adaugam la lista de genuri favorite a utilizatorului, cel dat ca parametru.
+
+Daca actiunea este de tipul "back" apelam metoda "typeBack" in care realizam inversul operatiei de navigare catre
+o pagina urmatoare si anume apelam "undo", in cadrul careia setam pagina curenta la penultima pagina adaugata din lista
+daca aceasta nu este Login sau Register.
+
+Daca actiunea este de tipul "database" si feature-ul sau este "add", verificam daca exista vreo eroare la
+apelarea actiunii , adica daca filmul exista deja in lista de filme a utilizatorului.
+In caz negativ, adaugam filmul si verificam pentru fiecare user daca acesta este interzis in tara sa, iar in caz negativ
+se verifica daca este abonat la vreun gen din cele ale filmului si se notifica.
+
+La finalul actiunilor, daca utilizatorul este premium, va primi o recomandare cu un film care ar trebui sa-l vizioneze
+si nu a facut-o deja, parcurgand lista de genuri ale filme apreciate si retinand numarul
+de aprecieri ale fiecarui gen (adica in cate file apreciate de utilizator s-a gasit genul respectiv).
+Dupa aceea se cauta filmul cu cele mai multe like-uri (tipuri de genuri apreciate) si in caz de egalitate se returneaza cel
+care este mai amre in ordine lexicografica.
+
+
